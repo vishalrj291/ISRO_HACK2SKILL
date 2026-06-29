@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Search, Download, ChevronDown, MapPin } from 'lucide-react';
+import { Search, Download, ChevronDown, MapPin, Menu, Clock } from 'lucide-react';
+import { MISSION_META } from '../../data/missionData';
 
 /* ── Route → title map ──────────────────────────────────── */
 const PAGE_TITLES = {
-  '/':               { title: 'Mission Dashboard',      sub: 'CHANDRAYAAN-4 · LUNAR SOUTH POLE ICE SURVEY' },
+  '/':               { title: 'Mission Dashboard',      sub: 'POLARIS · AI-BASED LUNAR MISSION CONTROL' },
   '/terrain':        { title: 'Terrain Analysis',       sub: 'DEM · SLOPE · TRI · LANDING SITES' },
   '/ice-detection':  { title: 'Ice Detection',          sub: 'RADAR · PSR · TEMPERATURE · ILLUMINATION' },
   '/hazard':         { title: 'Hazard Assessment',      sub: 'SLOPE RISK · SHADOW ZONES · TRI CLASSIFICATION' },
@@ -25,7 +26,38 @@ const REGIONS = [
   'Amundsen Crater',
 ];
 
-export default function TopNavBar() {
+function UTCClock() {
+  const [time, setTime] = useState('');
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const h = String(now.getUTCHours()).padStart(2,'0');
+      const m = String(now.getUTCMinutes()).padStart(2,'0');
+      const s = String(now.getUTCSeconds()).padStart(2,'0');
+      setTime(`${h}:${m}:${s}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
+      <Clock size={10} style={{ color: 'var(--text-dim)' }} />
+      <span style={{
+        fontFamily: 'JetBrains Mono, monospace',
+        fontSize: 11,
+        fontWeight: 600,
+        color: 'var(--text-muted)',
+        letterSpacing: '0.05em',
+      }}>
+        {time} <span style={{ opacity: 0.6, fontSize: 9 }}>UTC</span>
+      </span>
+    </div>
+  );
+}
+
+export default function TopNavBar({ onHamburger }) {
   const { pathname } = useLocation();
   const { title, sub } = PAGE_TITLES[pathname] ?? PAGE_TITLES['/'];
   const [region, setRegion] = useState('Shackleton Complex');
@@ -42,7 +74,12 @@ export default function TopNavBar() {
   return (
     <div className="topnav">
 
-      {/* ── Mission identity ─────────────────────────────── */}
+      {/* ── Hamburger (mobile only) ──────────────────── */}
+      <button className="hamburger-btn" onClick={onHamburger} aria-label="Open navigation">
+        <Menu size={16} />
+      </button>
+
+      {/* ── Mission identity ─────────────────────────── */}
       <div className="topnav-mission">
         <div>
           <div style={{
@@ -51,6 +88,7 @@ export default function TopNavBar() {
             color: 'var(--text-primary)',
             fontFamily: 'Space Grotesk, sans-serif',
             lineHeight: 1.2,
+            letterSpacing: '-0.01em',
           }}>
             {title}
           </div>
@@ -68,16 +106,29 @@ export default function TopNavBar() {
 
       <div className="topnav-divider" />
 
-      {/* ── Search ──────────────────────────────────────── */}
+      {/* ── Search ──────────────────────────────────── */}
       <div className="topnav-search">
         <Search size={12} style={{ color: 'var(--text-dim)', flexShrink: 0 }} />
         <input placeholder="Search coordinates, layers, analysis…" />
       </div>
 
-      {/* ── Spacer ──────────────────────────────────────── */}
+      {/* ── Spacer ──────────────────────────────────── */}
       <div style={{ flex: 1 }} />
 
-      {/* ── Region selector ─────────────────────────────── */}
+      {/* ── SOL Counter ─────────────────────────────── */}
+      <div className="sol-badge">
+        <span className="sol-label">SOL</span>
+        <span className="sol-value">{MISSION_META.sol}</span>
+      </div>
+
+      <div className="topnav-divider" />
+
+      {/* ── UTC Clock ───────────────────────────────── */}
+      <UTCClock />
+
+      <div className="topnav-divider" />
+
+      {/* ── Region selector ─────────────────────────── */}
       <div style={{ position: 'relative' }}>
         <button
           className="topnav-region"
@@ -95,7 +146,7 @@ export default function TopNavBar() {
             position: 'absolute',
             top: 'calc(100% + 6px)',
             right: 0,
-            background: 'var(--bg-secondary)',
+            background: 'var(--bg-elevated)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-sm)',
             boxShadow: 'var(--shadow-lg)',
@@ -116,13 +167,13 @@ export default function TopNavBar() {
                   border: 'none',
                   cursor: 'pointer',
                   fontSize: 12,
-                  color: r === region ? 'var(--orange-deep)' : 'var(--text-secondary)',
+                  color: r === region ? 'var(--orange)' : 'var(--text-secondary)',
                   fontFamily: 'Inter, sans-serif',
                   fontWeight: r === region ? 600 : 400,
                   transition: 'background 0.1s',
                 }}
-                onMouseEnter={e => { if (r !== region) e.target.style.background = 'var(--bg-tertiary)'; }}
-                onMouseLeave={e => { if (r !== region) e.target.style.background = 'none'; }}
+                onMouseEnter={e => { if (r !== region) e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}
+                onMouseLeave={e => { if (r !== region) e.currentTarget.style.background = 'none'; }}
               >
                 {r}
               </button>
@@ -133,36 +184,33 @@ export default function TopNavBar() {
 
       <div className="topnav-divider" />
 
-      {/* ── API status ──────────────────────────────────── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+      {/* ── API status ──────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
         <div
-          className={`pulse-dot ${apiLive === true ? 'green' : apiLive === false ? '' : ''}`}
+          className={`pulse-dot ${apiLive === true ? 'green' : ''}`}
           style={{
             background: apiLive === true
               ? 'var(--green)'
               : apiLive === false
                 ? 'var(--red)'
                 : 'var(--text-dim)',
-            boxShadow: apiLive === true
-              ? '0 0 0 0 rgba(79,127,95,0.4)'
-              : 'none',
           }}
         />
         <span style={{
           fontSize: 10,
-          color: apiLive === true ? 'var(--green)' : 'var(--text-dim)',
+          color: apiLive === true ? 'var(--green)' : apiLive === false ? 'var(--red)' : 'var(--text-dim)',
           fontFamily: 'JetBrains Mono, monospace',
-          fontWeight: 600,
-          letterSpacing: '0.05em',
+          fontWeight: 700,
+          letterSpacing: '0.06em',
         }}>
-          {apiLive === true ? 'API LIVE' : apiLive === false ? 'OFFLINE' : '…'}
+          {apiLive === true ? 'API LIVE' : apiLive === false ? 'OFFLINE' : '···'}
         </span>
       </div>
 
       <div className="topnav-divider" />
 
-      {/* ── Export button ────────────────────────────────── */}
-      <button className="btn btn-primary" style={{ padding: '5px 12px', fontSize: 11 }}>
+      {/* ── Export button ───────────────────────────── */}
+      <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: 11 }}>
         <Download size={12} />
         Export
       </button>

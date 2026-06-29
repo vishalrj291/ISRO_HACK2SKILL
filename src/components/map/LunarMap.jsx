@@ -40,27 +40,27 @@ function LayerPanel({ layers, toggleLayer }) {
   return (
     <div style={{
       position: 'absolute', top: 12, right: 12, zIndex: 1000,
-      background: 'rgba(255,255,255,0.93)',
-      border: '1px solid rgba(216,221,230,0.9)',
+      background: 'rgba(11,17,32,0.90)',
+      border: '1px solid rgba(74,144,217,0.12)',
       borderRadius: 8,
       padding: '10px 14px',
       minWidth: 172,
-      backdropFilter: 'blur(6px)',
-      boxShadow: '0 4px 8px rgba(16,24,40,0.08)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      boxShadow: '0 8px 40px rgba(0,0,0,0.7)',
     }}>
       <div style={{
         fontFamily: 'JetBrains Mono, monospace',
         fontSize: 8, color: 'var(--text-dim)',
-        letterSpacing: '0.12em', marginBottom: 8,
+        letterSpacing: '0.14em', marginBottom: 8,
         textTransform: 'uppercase', fontWeight: 700,
-        fontFamily: 'Inter, sans-serif',
       }}>
         GIS LAYERS
       </div>
       {layers.map((layer) => (
         <label key={layer.id} style={{
           display: 'flex', alignItems: 'center', gap: 7,
-          marginBottom: 5, cursor: 'pointer',
+          marginBottom: 6, cursor: 'pointer',
         }}>
           <input
             type="checkbox"
@@ -78,7 +78,7 @@ function LayerPanel({ layers, toggleLayer }) {
           </span>
           {layer.color && (
             <span style={{
-              width: 7, height: 7, borderRadius: 2,
+              width: 6, height: 6, borderRadius: '1px',
               background: layer.active ? layer.color : 'var(--border)',
               flexShrink: 0, marginLeft: 'auto',
             }} />

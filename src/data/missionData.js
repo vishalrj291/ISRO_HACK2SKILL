@@ -1,7 +1,7 @@
 // Mission & scientific data for all components
 
 export const MISSION_META = {
-  name: 'CHANDRAYAAN-4 SOUTH POLE ICE SURVEY',
+  name: 'POLARIS: LUNAR ICE EXPLORATION ',
   missionId: 'ISRO-LPS-2024-004',
   region: 'Lunar South Polar Region',
   targetCrater: 'Shackleton–Haworth Complex',
