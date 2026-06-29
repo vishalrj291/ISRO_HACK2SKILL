@@ -97,6 +97,7 @@ Safe Route Planning
 Mission Dashboard
 ```
 ## Project Structure
+``` 
 ISRO-Lunar-Mission/
 │
 ├── backend/
@@ -123,6 +124,7 @@ ISRO-Lunar-Mission/
 │
 ├── requirements.txt
 └── README.md
+```
 
 ## Installation & Setup
 
