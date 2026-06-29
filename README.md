@@ -127,26 +127,28 @@ ISRO-Lunar-Mission/
 ```
 
 ## Installation & Setup
-
+```
 git clone https://github.com/your-username/ISRO-Lunar-Mission.git
 cd ISRO-Lunar-Mission
+```
 # 2. Backend setup
+```
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload
-
 Backend will run on:
-
 http://localhost:8000
+```
 # 3. Frontend setup
+```
 cd frontend
 npm install
 npm run dev
-
 Frontend will run on:
-
 http://localhost:5173
+```
 ## 🔄 Workflow
+```
 Upload lunar DEM / raster dataset
 Preprocess the dataset
 Generate slope and roughness maps
@@ -154,10 +156,10 @@ Estimate potential subsurface ice regions
 Detect unsafe terrain zones
 Plan a safe rover route
 View results on the mission dashboard
+```
 ## 📊 Output
-
 The system can generate:
-
+```
 Elevation map
 Slope map
 Roughness map
@@ -170,14 +172,15 @@ Landing site safety analysis
 Ice-rich region identification
 Terrain hazard assessment
 Scientific exploration support
+```
 ## 👨‍💻 Team
-
 Developed for ISRO Hackathon 2026.
-
 Team Members
+```
 Vishal Raj
 Divyanshi
 Pranjal
+```
 ## 📌 Status
 
 MVP under development.
